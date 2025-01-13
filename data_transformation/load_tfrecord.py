@@ -9,7 +9,7 @@ from traj_transforms import fractal_transform
 from np_processes import fractal_tf2np
 
 
-dataset_dir = "/data2/lzixuan/rfm_dataset"
+dataset_dir = "../raw_data"
 subdataset = "oxe/fractal20220817_data/0.1.0"
 dataset_path = os.path.join(dataset_dir, subdataset)
 print("dataset_path", dataset_path)
@@ -20,7 +20,7 @@ dataset = dl.dataset.DLataset.from_rlds(builder, shuffle=False)
 
 print(builder.info)
 
-target_dir = "/data2/lzixuan/rfm_dataset/data_transformation/dataset"
+target_dir = "../data_transformation/dataset"
 subdataset_list = subdataset.split("/")
 subdataset_list[0] = subdataset_list[0] + "_pkl"
 subdataset = "/".join(subdataset_list)
