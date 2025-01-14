@@ -25,7 +25,7 @@ def fractal_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     return trajectory
 
 
-def libero_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
+def libero_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     # gripper action is in -1 (open)...1 (close) --> clip to 0...1, flip --> +1 = open, 0 = close
     gripper_action = trajectory["action"][:, -1:]
     gripper_action = invert_gripper_actions(tf.clip_by_value(gripper_action, 0, 1))
@@ -38,5 +38,17 @@ def libero_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
         axis=1,
     )
     trajectory["observation"]["EEF_state"] = trajectory["observation"]["state"][:, :6]
-    trajectory["observation"]["gripper_state"] = trajectory["observation"]["state"][:, -1:]  # 2D gripper state
+    
+    # find the max gripper state in the trajectory and keep dim
+    max_gripper_state = tf.reduce_max(trajectory["observation"]["state"][:, -2:-1], axis=0, keepdims=True)
+    trajectory["observation"]["gripper_state"] = trajectory["observation"]["state"][:, -2:-1] / max_gripper_state # 1D gripper state (1 for fully open, 0 for fully closed)
     return trajectory
+
+
+STANDARDIZATION_TRANSFORMS = {
+    "fractal20220817_data": fractal_transform,
+    "libero_10_no_noops": libero_transform,
+    "libero_goal_no_noops": libero_transform,
+    "libero_object_no_noops": libero_transform,
+    "libero_spatial_no_noops": libero_transform,
+}

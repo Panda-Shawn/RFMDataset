@@ -32,3 +32,12 @@ def libero_tf2np(traj):
     lang_instruction = traj["language_instruction"].numpy()
     action = traj["action"].numpy()
     return proprio_state, thrid_view_img, wrist_img, lang_instruction, action
+
+
+STANDARDIZATION_PROCESSES = {
+    "fractal20220817_data": fractal_tf2np,
+    "libero_10_no_noops": libero_tf2np,
+    "libero_goal_no_noops": libero_tf2np,
+    "libero_object_no_noops": libero_tf2np,
+    "libero_spatial_no_noops": libero_tf2np,
+}
